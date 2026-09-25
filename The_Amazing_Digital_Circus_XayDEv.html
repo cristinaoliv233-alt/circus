@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#151122">
+<meta name="description" content="The Amazing Digital Circus — experiência web XayDEv inspirada no Circo Digital.">
+<title>The Amazing Digital Circus | XayDEv</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --ink:#161021;
+  --ink2:#09070f;
+  --violet:#8e55ff;
+  --purple:#c58cff;
+  --pink:#ff5ab7;
+  --cyan:#55dcff;
+  --yellow:#ffe66d;
+  --red:#ff6e76;
+  --green:#a9ef63;
+  --cream:#fff8ee;
+  --muted:#afa8b9;
+  --line:rgba(255,255,255,.12);
+  --glass:rgba(20,14,32,.72);
+  --shadow:0 28px 90px rgba(0,0,0,.34);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  color:var(--cream);
+  font-family:"Baloo 2",system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 8% 5%,rgba(255,90,183,.12),transparent 18%),
+    radial-gradient(circle at 88% 14%,rgba(85,220,255,.12),transparent 20%),
+    radial-gradient(circle at 55% 48%,rgba(142,85,255,.11),transparent 34%),
+    linear-gradient(180deg,#090611 0%,#130c1e 34%,#0a0710 100%);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-4;pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:linear-gradient(to bottom,black,transparent 94%);
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:60;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.035) 4px);
+  mix-blend-mode:screen;
+}
+
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+#confetti{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;
+}
+.spark{
+  position:absolute;
+  width:6px;height:10px;
+  border-radius:3px;
+  opacity:.72;
+  animation:drop linear infinite;
+  transform:translateY(-20px) rotate(0deg);
+}
+@keyframes drop{
+  0%{transform:translateY(-15vh) rotate(0deg);opacity:0}
+  10%{opacity:.75}
+  85%{opacity:.5}
+  100%{transform:translateY(120vh) rotate(620deg);opacity:0}
+}
+
+#glitchCurtain{
+  position:fixed;inset:0;z-index:70;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(255,255,255,.10),transparent 22%),
+    linear-gradient(90deg,rgba(255,90,183,.15),transparent 25%,rgba(85,220,255,.16) 75%,transparent);
+  opacity:0;
+  mix-blend-mode:screen;
+}
+#glitchCurtain.flash{animation:flash .45s steps(3,end)}
+@keyframes flash{
+  0%,100%{opacity:0}
+  30%{opacity:.32}
+  45%{opacity:.06}
+  66%{opacity:.22}
+}
+
+.topbar{
+  position:fixed;top:14px;left:14px;right:14px;z-index:35;
+  display:flex;align-items:center;justify-content:space-between;gap:15px;
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(12,8,18,.62);
+  backdrop-filter:blur(18px);
+  box-shadow:0 15px 60px rgba(0,0,0,.2),0 0 35px rgba(142,85,255,.07);
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font:700 12px "Space Mono",monospace;
+  letter-spacing:1.6px;
+}
+.brand-orb{
+  width:28px;height:28px;border-radius:50%;
+  background:
+    conic-gradient(var(--pink),var(--yellow),var(--cyan),var(--violet),var(--pink));
+  padding:2px;
+  animation:spin 7s linear infinite;
+  box-shadow:0 0 23px rgba(197,140,255,.18);
+}
+.brand-orb::after{
+  content:"";display:block;width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle,#1b1026 15%,#0b0710 68%);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+nav{display:flex;gap:3px}
+nav a{
+  padding:8px 10px;border-radius:9px;
+  color:var(--muted);font-size:12px;transition:.22s;
+}
+nav a:hover{color:white;background:rgba(255,255,255,.05)}
+
+.status{
+  display:flex;align-items:center;gap:8px;
+  color:#bbb0c8;font:9px "Space Mono",monospace;letter-spacing:.9px;
+}
+.status i{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 12px var(--green);
+  animation:blink 1.5s infinite;
+}
+@keyframes blink{50%{opacity:.28;transform:scale(.75)}}
+
+main{max-width:1240px;margin:auto;padding:0 22px}
+
+.hero{
+  min-height:100vh;
+  padding:135px 0 70px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:45px;
+  align-items:center;
+  position:relative;
+}
+.hero-copy{position:relative;z-index:2}
+.tiny{
+  color:var(--cyan);
+  font:9px "Space Mono",monospace;
+  letter-spacing:2px;
+  margin-bottom:16px;
+  text-transform:uppercase;
+}
+.tiny::before{
+  content:"";
+  display:inline-block;width:28px;height:1px;
+  margin-right:9px;vertical-align:middle;
+  background:var(--cyan);
+  box-shadow:0 0 13px var(--cyan);
+}
+
+.title-stack{
+  position:relative;
+  display:inline-block;
+}
+h1{
+  font-size:clamp(70px,10vw,140px);
+  line-height:.78;
+  letter-spacing:-6px;
+  font-weight:800;
+  color:#fffdf7;
+  text-shadow:
+    4px 4px 0 rgba(255,90,183,.38),
+    -3px -3px 0 rgba(85,220,255,.26),
+    0 0 38px rgba(255,255,255,.10);
+}
+h1 span{
+  display:block;
+  color:var(--yellow);
+  text-shadow:
+    4px 4px 0 rgba(255,90,183,.28),
+    0 0 24px rgba(255,230,109,.10);
+  font-size:.62em;
+  letter-spacing:-2px;
+  margin-top:8px;
+}
+.title-stack::after{
+  content:"";
+  position:absolute;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--pink);
+  right:-17px;top:9px;
+  box-shadow:0 0 15px var(--pink);
+  animation:dotPop 1.8s ease-in-out infinite;
+}
+@keyframes dotPop{50%{transform:scale(.5);opacity:.4}}
+
+.hero p{
+  max-width:690px;
+  margin-top:23px;
+  color:#d5ccda;
+  font-size:17px;
+  line-height:1.76;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.tag{
+  padding:7px 10px;border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  color:#ded5e5;font:9px "Space Mono",monospace;
+}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.btn{
+  position:relative;overflow:hidden;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;
+  padding:12px 16px;
+  color:white;
+  background:rgba(255,255,255,.05);
+  font:700 9px "Space Mono",monospace;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.24s;
+}
+.btn::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(95deg,transparent,rgba(255,255,255,.12),transparent);
+  transform:translateX(-120%);transition:.5s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.23)}
+.btn:hover::before{transform:translateX(120%)}
+.btn.primary{
+  border-color:rgba(255,230,109,.35);
+  background:linear-gradient(90deg,rgba(255,90,183,.18),rgba(142,85,255,.20));
+}
+.btn.cyan{border-color:rgba(85,220,255,.30);background:rgba(85,220,255,.08)}
+
+.hero-stage{
+  min-height:590px;
+  position:relative;
+  display:grid;place-items:center;
+}
+.curtain{
+  position:absolute;inset:2% 4% 4%;
+  border-radius:28px;
+  overflow:hidden;
+  background:
+    repeating-linear-gradient(90deg,
+      #5d153f 0 34px,#7a2056 34px 68px,#5d153f 68px 102px);
+  box-shadow:
+    inset 0 0 80px rgba(0,0,0,.42),
+    0 30px 80px rgba(0,0,0,.3);
+  transform:rotate(-1deg);
+}
+.curtain::before,.curtain::after{
+  content:"";position:absolute;top:0;bottom:0;width:22%;
+  background:linear-gradient(90deg,rgba(0,0,0,.40),transparent);
+  filter:blur(2px);
+}
+.curtain::before{left:0}
+.curtain::after{right:0;transform:scaleX(-1)}
+.curtain-inner{
+  position:absolute;inset:7%;
+  border:2px dashed rgba(255,230,109,.27);
+  border-radius:20px;
+}
+.portal{
+  position:absolute;
+  width:min(440px,78vw);
+  aspect-ratio:1;
+  border-radius:50%;
+  background:
+    conic-gradient(from 0deg,
+      #ffe66d 0 9%,#ff5ab7 9% 18%,#55dcff 18% 30%,
+      #8e55ff 30% 44%,#a9ef63 44% 55%,#ff6e76 55% 70%,
+      #ffe66d 70% 84%,#ff5ab7 84% 100%);
+  filter:blur(.3px);
+  padding:13px;
+  box-shadow:0 0 100px rgba(197,140,255,.25),0 0 150px rgba(85,220,255,.12);
+  animation:portalSpin 16s linear infinite;
+}
+.portal::before{
+  content:"";
+  position:absolute;inset:15px;border-radius:50%;
+  background:
+    radial-gradient(circle,#170d22 0 21%,transparent 22%),
+    radial-gradient(circle,transparent 0 46%,rgba(255,255,255,.12) 47%,transparent 48%),
+    #100918;
+}
+.portal::after{
+  content:"";
+  position:absolute;inset:23%;
+  border:2px dashed rgba(255,255,255,.23);
+  border-radius:50%;
+  animation:spin 8s linear infinite reverse;
+}
+@keyframes portalSpin{to{transform:rotate(360deg)}}
+.ticket{
+  position:absolute;
+  right:2%;bottom:4%;
+  width:180px;
+  padding:13px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(10,7,15,.72);
+  backdrop-filter:blur(12px);
+  transform:rotate(5deg);
+  box-shadow:var(--shadow);
+}
+.ticket small{color:var(--cyan);font:8px "Space Mono",monospace}
+.ticket b{display:block;font-size:20px;color:var(--yellow);margin-top:5px}
+.ticket span{display:block;color:#b6adbc;font-size:10px;line-height:1.45;margin-top:4px}
+.circus-note{
+  position:absolute;left:2%;bottom:4%;
+  max-width:180px;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,7,15,.68);
+  color:#c8bfce;
+  font:8px "Space Mono",monospace;
+  line-height:1.5;
+  transform:rotate(-4deg);
+}
+
+section{padding:100px 0;position:relative}
+.section-head{
+  display:flex;justify-content:space-between;align-items:end;gap:24px;
+  margin-bottom:26px;
+}
+.kicker{
+  color:var(--pink);
+  font:9px "Space Mono",monospace;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+h2{
+  font-size:clamp(31px,4vw,58px);
+  line-height:.96;
+  letter-spacing:-2px;
+}
+.section-note{
+  max-width:500px;color:var(--muted);
+  font-size:13px;line-height:1.65;
+}
+
+.status-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+.stat{
+  position:relative;
+  overflow:hidden;
+  padding:17px;
+  min-height:122px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.11);
+  background:
+    linear-gradient(180deg,rgba(24,16,37,.82),rgba(10,7,15,.90));
+  transition:.25s;
+}
+.stat::after{
+  content:"";position:absolute;right:-33px;top:-33px;
+  width:92px;height:92px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,90,183,.18),transparent 66%);
+}
+.stat:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18);box-shadow:0 17px 45px rgba(0,0,0,.22)}
+.stat small{font:8px "Space Mono",monospace;color:#a59baa;letter-spacing:1.1px}
+.stat strong{display:block;margin-top:9px;font-size:20px}
+.stat span{display:block;margin-top:4px;color:#a9a0ae;font-size:11px;line-height:1.43}
+
+.about-grid{
+  display:grid;grid-template-columns:1.15fr .85fr;gap:14px;
+}
+.panel{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(23,15,34,.82),rgba(10,7,15,.92));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.panel-head{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  font:8px "Space Mono",monospace;
+  color:#aaa1b1;letter-spacing:1.3px;
+}
+.panel-head span:last-child{color:var(--yellow)}
+.panel-body{padding:21px}
+.prose{color:#c8bfca;font-size:13px;line-height:1.82}
+.prose + .prose{margin-top:14px}
+
+.system{
+  display:grid;gap:10px;
+}
+.system-row{
+  padding:12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:11px;
+  background:rgba(255,255,255,.022);
+}
+.system-row label{
+  display:flex;justify-content:space-between;
+  color:#aaa0b0;font:8px "Space Mono",monospace;
+}
+.bar{
+  height:8px;margin-top:8px;
+  border-radius:999px;background:#0d0a13;overflow:hidden;
+}
+.bar i{
+  display:block;height:100%;width:var(--w);
+  background:linear-gradient(90deg,var(--pink),var(--yellow),var(--cyan));
+  box-shadow:0 0 12px rgba(255,90,183,.22);
+}
+
+.characters{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.character{
+  position:relative;
+  overflow:hidden;
+  min-height:400px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:#0c0811;
+  transition:.3s;
+}
+.character:hover{
+  transform:translateY(-7px);
+  border-color:rgba(255,255,255,.20);
+  box-shadow:0 25px 55px rgba(0,0,0,.30);
+}
+.character-img{
+  position:absolute;inset:0 0 94px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#20162b,#0b0710);
+}
+.character-img img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+  transition:transform .5s,filter .35s;
+}
+.character:hover .character-img img{
+  transform:scale(1.055);
+  filter:saturate(1.10) contrast(1.04);
+}
+.character-img::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(8,5,12,.38) 75%,rgba(8,5,12,.90) 100%);
+}
+.card-data{
+  position:absolute;left:0;right:0;bottom:0;
+  min-height:104px;
+  padding:15px;
+  background:linear-gradient(180deg,rgba(9,6,13,.12),rgba(9,6,13,.94) 20%);
+}
+.card-data small{font:8px "Space Mono",monospace;color:var(--cyan);letter-spacing:1px}
+.card-data h3{margin-top:4px;font-size:22px}
+.card-data p{color:#ada4b2;font-size:10.5px;line-height:1.48;margin-top:4px}
+.character .corner{
+  position:absolute;top:10px;right:10px;z-index:2;
+  padding:5px 7px;border-radius:7px;
+  background:rgba(8,5,12,.56);
+  border:1px solid rgba(255,255,255,.11);
+  color:#d7cfdb;font:7px "Space Mono",monospace;
+}
+
+.caine-zone{
+  display:grid;grid-template-columns:.86fr 1.14fr;gap:14px;
+}
+.caine-card{
+  min-height:490px;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 30% 25%,rgba(255,90,183,.17),transparent 25%),
+    linear-gradient(150deg,#250f2d,#0c0710 65%);
+}
+.caine-card img{
+  width:100%;height:100%;object-fit:contain;object-position:center 22%;
+  filter:saturate(1.05);
+  transform:scale(1.02);
+}
+.caine-label{
+  position:absolute;left:15px;right:15px;bottom:14px;
+  padding:12px;border-radius:11px;
+  background:rgba(7,5,10,.67);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);
+}
+.caine-label small{color:var(--yellow);font:8px "Space Mono",monospace}
+.caine-label b{display:block;font-size:24px;line-height:1;margin-top:3px}
+.caine-label span{display:block;color:#b8afbb;font-size:10px;margin-top:4px}
+
+.lore-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
+}
+.lore{
+  padding:16px;border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;background:rgba(255,255,255,.022);
+}
+.lore b{display:block;font-size:14px;color:#fff4c5}
+.lore p{color:#aaa0af;font-size:11px;line-height:1.6;margin-top:6px}
+
+.episodes-shell{
+  display:grid;grid-template-columns:190px 1fr;
+  min-height:580px;
+}
+.season-list{
+  padding:10px;
+  border-right:1px solid rgba(255,255,255,.08);
+  background:rgba(7,5,11,.44);
+}
+.season{
+  width:100%;
+  text-align:left;
+  border:1px solid transparent;
+  background:transparent;
+  color:#9f95a5;
+  padding:11px;
+  border-radius:10px;
+  cursor:pointer;
+  font:700 9px "Space Mono",monospace;
+  letter-spacing:1px;
+  margin-bottom:4px;
+  transition:.2s;
+}
+.season:hover{color:#fff;background:rgba(255,255,255,.04)}
+.season.active{
+  color:#fff3c5;
+  border-color:rgba(255,230,109,.20);
+  background:linear-gradient(90deg,rgba(255,90,183,.09),rgba(255,230,109,.06));
+}
+.episode-panel{padding:18px}
+.episode-top{
+  display:flex;justify-content:space-between;gap:20px;align-items:flex-start;
+  margin-bottom:16px;
+}
+.episode-top h3{font-size:27px}
+.episode-top p{max-width:600px;color:#a89ead;font-size:11px;line-height:1.55;margin-top:5px}
+.episode-badge{
+  flex:none;padding:7px 9px;border:1px solid rgba(255,255,255,.10);border-radius:8px;
+  color:var(--pink);font:8px "Space Mono",monospace;
+}
+.episode-list{display:grid;gap:7px}
+.episode{
+  display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;
+  padding:12px 13px;border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.018);border-radius:10px;
+  transition:.2s;
+}
+.episode:hover{
+  transform:translateX(2px);
+  border-color:rgba(255,255,255,.14);
+  background:rgba(255,255,255,.035);
+}
+.ep-num{font:8px "Space Mono",monospace;color:var(--cyan)}
+.ep-name{font-size:12px}
+.ep-desc{font-size:9px;color:#968e9d;margin-top:3px;line-height:1.45}
+.ep-time{font:8px "Space Mono",monospace;color:#867b8c}
+
+.glitch-lab{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+}
+.terminal{
+  min-height:440px;border-radius:16px;
+  border:1px solid rgba(85,220,255,.16);
+  background:
+    radial-gradient(circle at 90% 15%,rgba(85,220,255,.09),transparent 20%),
+    linear-gradient(145deg,#07131a,#080811);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.term-bar{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 12px;border-bottom:1px solid rgba(85,220,255,.09);
+}
+.tdot{width:7px;height:7px;border-radius:50%}
+.tdot:nth-child(1){background:#ff667e}.tdot:nth-child(2){background:#ffe66d}.tdot:nth-child(3){background:#a9ef63}
+.term-title{margin-left:auto;color:#7890a0;font:8px "Space Mono",monospace}
+.terminal-body{
+  padding:19px;
+  font:10px/1.75 "Space Mono",monospace;
+  color:#aee9f3;
+  white-space:pre-wrap;
+}
+.cursor{
+  display:inline-block;width:7px;height:12px;background:var(--cyan);
+  vertical-align:-2px;animation:blink 1s step-end infinite;
+}
+.fake-window{
+  min-height:440px;position:relative;overflow:hidden;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 20% 25%,rgba(255,230,109,.13),transparent 20%),
+    radial-gradient(circle at 80% 75%,rgba(255,90,183,.11),transparent 25%),
+    linear-gradient(150deg,#21122b,#0b0711);
+}
+.fake-window .marquee{
+  position:absolute;left:-8%;right:-8%;top:24%;
+  transform:rotate(-7deg);
+  padding:10px 0;
+  background:rgba(255,230,109,.95);
+  color:#1a0f1a;
+  font:900 13px "Space Mono",monospace;
+  letter-spacing:2px;
+  white-space:nowrap;
+  animation:marquee 10s linear infinite;
+}
+@keyframes marquee{to{transform:translateX(-30%) rotate(-7deg)}}
+.fake-window .big-eye{
+  position:absolute;width:145px;height:145px;border-radius:50%;
+  left:50%;top:50%;transform:translate(-50%,-44%);
+  border:9px solid rgba(255,255,255,.83);
+  background:radial-gradient(circle,#18233d 0 10%,#55dcff 11% 23%,#151226 24% 46%,#ff5ab7 47% 52%,transparent 53%);
+  box-shadow:0 0 50px rgba(85,220,255,.18);
+  animation:eyeFloat 3.2s ease-in-out infinite;
+}
+@keyframes eyeFloat{50%{transform:translate(-50%,-48%) scale(1.05)}}
+.fake-window p{
+  position:absolute;left:18px;right:18px;bottom:17px;
+  color:#c5b9cc;font-size:11px;line-height:1.55;
+}
+.fake-window b{color:#fff0a1}
+
+.trailer{
+  min-height:440px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:
+    linear-gradient(90deg,rgba(16,8,24,.74),rgba(16,8,24,.45)),
+    url("https://i.ytimg.com/vi/FkXhKu80CWU/maxresdefault.jpg") center/cover;
+  box-shadow:var(--shadow);
+}
+.trailer::before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(5,2,10,.10),rgba(5,2,10,.82)),
+    repeating-linear-gradient(90deg,transparent 0 24px,rgba(255,255,255,.025) 25px);
+}
+.trailer-content{
+  position:relative;z-index:2;
+  min-height:440px;
+  display:grid;place-items:center;
+  text-align:center;
+  padding:30px;
+}
+.trailer-box{
+  max-width:720px;
+  padding:26px 28px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:15px;
+  background:rgba(7,4,11,.65);
+  backdrop-filter:blur(12px);
+}
+.trailer-box small{color:var(--yellow);font:8px "Space Mono",monospace;letter-spacing:1.6px}
+.trailer-box h2{margin-top:7px;font-size:clamp(35px,5vw,67px)}
+.trailer-box p{margin-top:12px;color:#bab0be;font-size:12px;line-height:1.65}
+.trailer-box .actions{justify-content:center}
+
+.footer{
+  padding:46px 0 62px;
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;justify-content:space-between;gap:20px;
+  color:#8e8594;font:8px "Space Mono",monospace;letter-spacing:1.2px;
+}
+.footer strong{color:#ded5df}
+
+.modal-bg{
+  position:fixed;inset:0;z-index:80;
+  display:grid;place-items:center;padding:16px;
+  background:rgba(4,2,7,.78);
+  backdrop-filter:blur(16px);
+  opacity:0;pointer-events:none;transition:.25s;
+}
+.modal-bg.open{opacity:1;pointer-events:auto}
+.modal{
+  width:min(820px,100%);max-height:87vh;overflow:auto;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:17px;
+  background:linear-gradient(180deg,#1a1024,#09060f);
+  box-shadow:0 30px 110px rgba(0,0,0,.58);
+  transform:translateY(18px) scale(.985);transition:.25s;
+}
+.modal-bg.open .modal{transform:none}
+.modal-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.modal-head span{color:var(--cyan);font:8px "Space Mono",monospace;letter-spacing:1px}
+.close{
+  width:34px;height:34px;border:1px solid rgba(255,255,255,.11);
+  border-radius:9px;background:transparent;color:#d8cfdc;cursor:pointer
+}
+.modal-body{padding:22px}
+.modal-body h3{font-size:28px;color:var(--yellow)}
+.modal-body p{margin-top:8px;color:#b7adbb;font-size:12px;line-height:1.75}
+.modal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:18px}
+.modal-item{
+  padding:13px;border:1px solid rgba(255,255,255,.08);
+  border-radius:11px;background:rgba(255,255,255,.02);
+}
+.modal-item b{display:block;color:#f5ecff;font-size:11px}
+.modal-item span{display:block;margin-top:5px;color:#9d94a2;font-size:10px;line-height:1.55}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .72s,transform .72s}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:1050px){
+  .hero{grid-template-columns:1fr}
+  .hero-stage{min-height:620px}
+  .characters{grid-template-columns:repeat(3,1fr)}
+  .status-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:780px){
+  nav,.status{display:none}
+  main{padding:0 14px}
+  .topbar{left:10px;right:10px;top:10px}
+  .hero{padding-top:120px}
+  .section-head{display:block}
+  .section-note{margin-top:10px}
+  .about-grid,.caine-zone,.glitch-lab{grid-template-columns:1fr}
+  .characters{grid-template-columns:1fr 1fr}
+  .episodes-shell{grid-template-columns:1fr}
+  .season-list{
+    display:flex;gap:4px;overflow:auto;
+    border-right:0;border-bottom:1px solid rgba(255,255,255,.08)
+  }
+  .season{min-width:82px;margin:0}
+  .episode{grid-template-columns:45px 1fr}
+  .ep-time{display:none}
+}
+@media(max-width:500px){
+  .status-grid,.characters{grid-template-columns:1fr}
+  h1{letter-spacing:-4px}
+  .hero-stage{min-height:520px}
+  .poster-card{display:none}
+  .ticket{right:0}
+  .circus-note{left:0}
+  .lore-grid,.modal-grid{grid-template-columns:1fr}
+  .footer{display:block}
+  .footer span{display:block;margin-top:10px}
+}
+</style>
+</head>
+
+<body>
+<div id="confetti" aria-hidden="true"></div>
+<div id="glitchCurtain"></div>
+
+<header class="topbar">
+  <a href="#top" class="brand">
+    <span class="brand-orb"></span>
+    <span>XayDEv</span>
+  </a>
+
+  <nav>
+    <a href="#circo">O Circo</a>
+    <a href="#personagens">Personagens</a>
+    <a href="#episodios">Episódios</a>
+    <a href="#lore">Lore</a>
+    <a href="#trailer">Trailer</a>
+  </nav>
+
+  <div class="status"><i></i> DIGITAL CIRCUS // ONLINE</div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="tiny">WELCOME TO THE DIGITAL CIRCUS</div>
+
+      <div class="title-stack">
+        <h1>
+          THE AMAZING
+          <span>DIGITAL CIRCUS</span>
+        </h1>
+      </div>
+
+      <p>
+        Um mundo virtual colorido, absurdo e profundamente perturbador onde uma mulher acorda
+        transformada numa personagem de desenho e descobre que sair pode não ser tão simples
+        quanto encontrar uma porta.
+      </p>
+
+      <div class="hero-tags">
+        <span class="tag">SURREAL</span>
+        <span class="tag">PSICOLÓGICO</span>
+        <span class="tag">COMÉDIA SOMBRIA</span>
+        <span class="tag">REALIDADE VIRTUAL</span>
+        <span class="tag">GLITCH</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="#circo">Entrar no circo</a>
+        <a class="btn cyan" href="#personagens">Conhecer a trupe</a>
+        <button class="btn" id="openModal">Abrir arquivo</button>
+      </div>
+    </div>
+
+    <div class="hero-stage">
+      <div class="curtain"><div class="curtain-inner"></div></div>
+      <div class="portal" aria-hidden="true"></div>
+
+      <div class="circus-note">
+        KEEP SMILING.<br>
+        FOLLOW THE LIGHT.<br>
+        DO NOT LOOK FOR THE EXIT.
+      </div>
+
+      <div class="ticket">
+        <small>ADMISSION PASS</small>
+        <b>∞</b>
+        <span>THE AMAZING DIGITAL CIRCUS<br>ONE-WAY ENTRY</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="circo">
+    <div class="section-head">
+      <div>
+        <div class="kicker">01 // THE DIGITAL WORLD</div>
+        <h2>Bem-vindo ao Circo</h2>
+      </div>
+      <p class="section-note">
+        A GLITCH descreve a série como uma comédia surreal e psicológica sobre personagens de desenho
+        presos num mundo virtual sob os caprichos de uma IA.
+      </p>
+    </div>
+
+    <div class="status-grid">
+      <article class="stat">
+        <small>CRIADORA</small>
+        <strong>Gooseworx</strong>
+        <span>Criadora de The Amazing Digital Circus.</span>
+      </article>
+      <article class="stat">
+        <small>ESTREIA</small>
+        <strong>Out. 2023</strong>
+        <span>A série estreou com o piloto no YouTube.</span>
+      </article>
+      <article class="stat">
+        <small>GÉNERO</small>
+        <strong>Dark Comedy</strong>
+        <span>Comédia surreal, psicológica e animada.</span>
+      </article>
+      <article class="stat">
+        <small>EPISÓDIOS</small>
+        <strong>9</strong>
+        <span>A Netflix Portugal lista nove episódios atualmente.</span>
+      </article>
+    </div>
+
+    <div class="about-grid" style="margin-top:14px">
+      <div class="panel">
+        <div class="panel-head">
+          <span>PRIMARY FILE // POMNI</span>
+          <span>OPEN</span>
+        </div>
+        <div class="panel-body">
+          <p class="prose">
+            Pomni é uma mulher que fica inexplicavelmente presa num mundo de realidade virtual com
+            outras cinco pessoas. Dentro do Circo, cada humano assume uma forma de personagem animado,
+            enquanto todos são submetidos às aventuras e aos caprichos de Caine, a IA que dirige o espetáculo.
+          </p>
+          <p class="prose">
+            O contraste entre o visual alegre, as missões absurdas e o desconforto de estar preso é uma
+            das marcas centrais da série. A própria GLITCH resume a premissa como um grupo de personagens
+            que odeia a sua situação e quer sair.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span>CIRCUS CONTROL // LIVE</span>
+          <span>CAINE</span>
+        </div>
+        <div class="panel-body">
+          <div class="system">
+            <div class="system-row">
+              <label><span>FUN ENGINE</span><span>94%</span></label>
+              <div class="bar"><i style="--w:94%"></i></div>
+            </div>
+            <div class="system-row">
+              <label><span>REALITY STABILITY</span><span>51%</span></label>
+              <div class="bar"><i style="--w:51%"></i></div>
+            </div>
+            <div class="system-row">
+              <label><span>ESCAPE PROBABILITY</span><span>02%</span></label>
+              <div class="bar"><i style="--w:2%"></i></div>
+            </div>
+            <div class="system-row">
+              <label><span>PSYCHOLOGICAL PRESSURE</span><span>99%</span></label>
+              <div class="bar"><i style="--w:99%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="personagens">
+    <div class="section-head">
+      <div>
+        <div class="kicker">02 // CAST DATABASE</div>
+        <h2>A trupe</h2>
+      </div>
+      <p class="section-note">
+        Perfis apresentados como registos visuais da equipa presa dentro do Circo Digital.
+      </p>
+    </div>
+
+    <div class="characters">
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/687/143/980" alt="Pomni" loading="lazy">
+        </div>
+        <span class="corner">HUMAN // JESTER</span>
+        <div class="card-data">
+          <small>01 // POV CHARACTER</small>
+          <h3>Pomni</h3>
+          <p>A recém-chegada ao Circo, ansiosa para encontrar uma saída e recuperar o controlo da própria vida.</p>
+        </div>
+      </article>
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/003/021/026/f8f" alt="Jax" loading="lazy">
+        </div>
+        <span class="corner">RABBIT // TROUBLEMAKER</span>
+        <div class="card-data">
+          <small>02 // CHAOS VARIABLE</small>
+          <h3>Jax</h3>
+          <p>Um coelho lilás sarcástico, provocador e extremamente confortável com o caos à sua volta.</p>
+        </div>
+      </article>
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/705/229/72d" alt="Ragatha" loading="lazy">
+        </div>
+        <span class="corner">RAGDOLL // OPTIMIST</span>
+        <div class="card-data">
+          <small>03 // SUPPORT</small>
+          <h3>Ragatha</h3>
+          <p>A figura otimista da trupe, tentando manter todos de pé enquanto o Circo torna isso cada vez mais difícil.</p>
+        </div>
+      </article>
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/713/332/680" alt="Gangle" loading="lazy">
+        </div>
+        <span class="corner">RIBBON // MASKS</span>
+        <div class="card-data">
+          <small>04 // EMOTIONAL STATE</small>
+          <h3>Gangle</h3>
+          <p>Uma personagem feita de fitas e máscaras, com diferentes estados emocionais ligados à sua expressão.</p>
+        </div>
+      </article>
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/919/546/9ad" alt="Kinger" loading="lazy">
+        </div>
+        <span class="corner">CHESS // LONG-TERM</span>
+        <div class="card-data">
+          <small>05 // MEMORY</small>
+          <h3>Kinger</h3>
+          <p>Um rei de xadrez excêntrico que vive no Circo há mais tempo do que os restantes humanos.</p>
+        </div>
+      </article>
+
+      <article class="character">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/814/009/0f4" alt="Zooble" loading="lazy">
+        </div>
+        <span class="corner">MODULAR // SKEPTIC</span>
+        <div class="card-data">
+          <small>06 // RESISTANCE</small>
+          <h3>Zooble</h3>
+          <p>Uma figura modular, irritável e pouco interessada em fingir que as aventuras de Caine são divertidas.</p>
+        </div>
+      </article>
+
+      <article class="character" style="grid-column:span 2">
+        <div class="character-img">
+          <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/695/605/5ce.png" alt="Caine" loading="lazy">
+        </div>
+        <span class="corner">AI // RINGMASTER</span>
+        <div class="card-data">
+          <small>07 // SYSTEM ADMIN</small>
+          <h3>Caine</h3>
+          <p>A inteligência artificial que dirige o Circo, cria aventuras e tenta manter o espetáculo em movimento.</p>
+        </div>
+      </article>
+
+      <article class="character" style="grid-column:span 2">
+        <div class="character-img">
+          <img src="https://image.parco.jp/SCCWEB/image/ikebukuro/store/storage/w1240/newsevent_cname_20241227113001.jpg" alt="The Amazing Digital Circus — elenco" loading="lazy">
+        </div>
+        <span class="corner">FULL CAST // GROUP FILE</span>
+        <div class="card-data">
+          <small>08 // THE WHOLE CIRCUS</small>
+          <h3>The Cast</h3>
+          <p>Uma imagem promocional reúne Caine, Pomni, Ragatha e os restantes habitantes do universo do Circo.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <div>
+        <div class="kicker">03 // THE RINGMASTER</div>
+        <h2>Caine</h2>
+      </div>
+      <p class="section-note">
+        O mestre de pista é uma IA que mantém os habitantes ocupados com aventuras, jogos e mundos fabricados.
+      </p>
+    </div>
+
+    <div class="caine-zone">
+      <div class="caine-card">
+        <img src="https://i.kym-cdn.com/photos/images/newsfeed/002/695/605/5ce.png" alt="Caine">
+        <div class="caine-label">
+          <small>ARTIFICIAL INTELLIGENCE</small>
+          <b>CAINE</b>
+          <span>Ringleader // Adventure Architect // Smile Enforcement</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span>CAINE CONTROL ROOM</span>
+          <span>AUTHORIZED</span>
+        </div>
+        <div class="panel-body">
+          <p class="prose">
+            Caine é apresentado como o mestre de pista excêntrico do Circo. Ele organiza as aventuras
+            para entreter os habitantes, mas as suas tentativas de diversão podem transformar-se em
+            experiências psicologicamente perturbadoras.
+          </p>
+
+          <div class="lore-grid" style="margin-top:17px">
+            <div class="lore">
+              <b>Adventure Engine</b>
+              <p>Cria missões e mundos para manter a trupe ocupada.</p>
+            </div>
+            <div class="lore">
+              <b>AI Logic</b>
+              <p>Nem sempre entende o impacto emocional das suas próprias regras.</p>
+            </div>
+            <div class="lore">
+              <b>Control</b>
+              <p>É a figura com maior capacidade de alterar o ambiente digital.</p>
+            </div>
+            <div class="lore">
+              <b>Smile Protocol</b>
+              <p>O Circo precisa parecer divertido, mesmo quando tudo começa a desmoronar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="episodios">
+    <div class="section-head">
+      <div>
+        <div class="kicker">04 // EPISODE ARCHIVE</div>
+        <h2>Arquivo de episódios</h2>
+      </div>
+      <p class="section-note">
+        A Netflix Portugal lista atualmente nove episódios, do piloto até “Lembrem-se”.
+      </p>
+    </div>
+
+    <div class="panel episodes-shell">
+      <div class="season-list">
+        <button class="season active" data-ep="1">EPISODE 01</button>
+        <button class="season" data-ep="2">EPISODE 02</button>
+        <button class="season" data-ep="3">EPISODE 03</button>
+        <button class="season" data-ep="4">EPISODE 04</button>
+        <button class="season" data-ep="5">EPISODE 05</button>
+        <button class="season" data-ep="6">EPISODE 06</button>
+        <button class="season" data-ep="7">EPISODE 07</button>
+        <button class="season" data-ep="8">EPISODE 08</button>
+        <button class="season" data-ep="9">EPISODE 09</button>
+      </div>
+
+      <div class="episode-panel">
+        <div class="episode-top">
+          <div>
+            <h3 id="epTitle">1. Piloto</h3>
+            <p id="epSummary">Presa no Circo Digital e desesperada para ir embora, Pomni encontra os outros humanos transformados em personagens de quadrinhos e Caine, o excêntrico mestre de pista.</p>
+          </div>
+          <div class="episode-badge" id="epBadge">27 MIN</div>
+        </div>
+        <div class="episode-list" id="episodeList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="lore">
+    <div class="section-head">
+      <div>
+        <div class="kicker">05 // GLITCH LAB</div>
+        <h2>O que está por trás do sorriso</h2>
+      </div>
+      <p class="section-note">
+        O visual alegre funciona como uma máscara para temas de identidade, trauma, confinamento e perda de controlo.
+      </p>
+    </div>
+
+    <div class="glitch-lab">
+      <div class="terminal">
+        <div class="term-bar">
+          <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+          <span class="term-title">CIRCUS_TERMINAL.exe</span>
+        </div>
+        <div class="terminal-body" id="terminalText"></div>
+      </div>
+
+      <div class="fake-window">
+        <div class="marquee">WELCOME WELCOME WELCOME — THIS IS NOT AN EXIT — WELCOME WELCOME</div>
+        <div class="big-eye"></div>
+        <p>
+          <b>CONGRATULATIONS!</b><br>
+          You are safe, you are happy, you are entertained.<br>
+          Please do not investigate the void.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="trailer">
+    <div class="section-head">
+      <div>
+        <div class="kicker">06 // VIDEO CHANNEL</div>
+        <h2>Trailer</h2>
+      </div>
+      <p class="section-note">
+        O canal oficial da GLITCH publicou trailers e episódios da série no YouTube.
+      </p>
+    </div>
+
+    <div class="trailer">
+      <div class="trailer-content">
+        <div class="trailer-box">
+          <small>THE CIRCUS IS WAITING</small>
+          <h2>READY TO PLAY?</h2>
+          <p>
+            Entra no canal oficial da GLITCH para ver o trailer e acompanhar os episódios de
+            The Amazing Digital Circus.
+          </p>
+          <div class="actions">
+            <a class="btn primary" target="_blank" rel="noopener"
+               href="https://www.youtube.com/watch?v=FkXhKu80CWU">Trailer oficial</a>
+            <a class="btn cyan" target="_blank" rel="noopener"
+               href="https://www.netflix.com/pt/title/81936142">Netflix</a>
+            <a class="btn" target="_blank" rel="noopener"
+               href="https://www.glitchprod.com/digital-circus">GLITCH</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <strong>XayDEv // DIGITAL CIRCUS ARCHIVE</strong>
+    <span>PLEASE ENJOY THE SHOW // EXIT STATUS: UNKNOWN</span>
+  </footer>
+
+</main>
+
+<div class="modal-bg" id="modalBg" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span>XayDEv // CLASSIFIED CIRCUS FILE</span>
+      <button class="close" id="closeModal" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <h3>The Amazing Digital Circus</h3>
+      <p>
+        Criada por Gooseworx e produzida pela GLITCH Productions, a série acompanha Pomni e outros
+        humanos presos num mundo virtual de temática circense, sob o controlo de uma inteligência artificial.
+        A GLITCH classifica-a como “Surreal Dark Animated Comedy”.
+      </p>
+
+      <div class="modal-grid">
+        <div class="modal-item">
+          <b>POMNI</b>
+          <span>A recém-chegada que se torna o ponto de entrada do público no Circo.</span>
+        </div>
+        <div class="modal-item">
+          <b>CAINE</b>
+          <span>A IA que assume o papel de mestre de pista e cria as aventuras.</span>
+        </div>
+        <div class="modal-item">
+          <b>O CIRCO</b>
+          <span>Um ambiente virtual que mistura espetáculo colorido com desconforto psicológico.</span>
+        </div>
+        <div class="modal-item">
+          <b>ABSTRACTION</b>
+          <span>Um dos conceitos mais inquietantes do universo, ligado à deterioração dos habitantes.</span>
+        </div>
+        <div class="modal-item">
+          <b>EPISÓDIOS</b>
+          <span>Nove episódios estão atualmente listados na página portuguesa da Netflix.</span>
+        </div>
+        <div class="modal-item">
+          <b>XayDEv</b>
+          <span>Arquivo digital inspirado visualmente no contraste entre brinquedo, interface e pesadelo.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const confetti=document.getElementById("confetti");
+const colors=["#ff5ab7","#ffe66d","#55dcff","#8e55ff","#a9ef63","#ff6e76"];
+for(let i=0;i<90;i++){
+  const s=document.createElement("span");
+  s.className="spark";
+  const size=4+Math.random()*5;
+  s.style.width=size+"px";
+  s.style.height=(size*1.7)+"px";
+  s.style.left=Math.random()*100+"%";
+  s.style.background=colors[i%colors.length];
+  s.style.animationDuration=(8+Math.random()*15)+"s";
+  s.style.animationDelay=(-Math.random()*22)+"s";
+  s.style.transform=`rotate(${Math.random()*180}deg)`;
+  confetti.appendChild(s);
+}
+
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting)entry.target.classList.add("visible");
+  });
+},{threshold:.11});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+const modalBg=document.getElementById("modalBg");
+document.getElementById("openModal").addEventListener("click",()=>{
+  modalBg.classList.add("open");
+  modalBg.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+});
+function closeModal(){
+  modalBg.classList.remove("open");
+  modalBg.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+document.getElementById("closeModal").addEventListener("click",closeModal);
+modalBg.addEventListener("click",e=>{if(e.target===modalBg)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+const episodes=[
+  ["1. Piloto","Presa no Circo Digital e desesperada para ir embora, Pomni encontra os outros humanos transformados em personagens de quadrinhos e Caine, o excêntrico mestre de pista.","27 MIN"],
+  ["2. Caos no Reino do Desfiladeiro Doce","A turma recebe a missão de perseguir bandidos de xarope num reino de doces, enquanto uma identidade digital começa a desmoronar.","26 MIN"],
+  ["3. O mistério da mansão Mildenhall","Kinger e Pomni exploram uma mansão assombrada numa aventura com monstros, fantasmas e sessões de terapia.","26 MIN"],
+  ["4. Fast food mascarado","A trupe passa o dia a trabalhar numa cadeia de fast-food, transformando trabalho banal em mais uma aventura de Caine.","25 MIN"],
+  ["5. Sem título","Caine lança aventuras vindas da caixa de sugestões e a relação entre Pomni e Jax começa a mudar.","27 MIN"],
+  ["6. Peguem as armas","Caine equipa a equipa para um jogo de sobrevivência brutal, com duplas e três mortes possíveis por jogador.","35 MIN"],
+  ["7. Episódio na praia","Todos vão à praia, mas revelações inquietantes começam a expor fissuras no Circo de Caine.","34 MIN"],
+  ["8. hjsakldfhl","Caine decide levar a palhaçada ainda mais longe e tudo começa a correr espetacularmente mal.","33 MIN"],
+  ["9. Lembrem-se","À medida que a realidade se desfaz, a trupe começa a descobrir a verdade por trás do Circo Digital e da sua história.","59 MIN"]
+];
+
+const epTitle=document.getElementById("epTitle");
+const epSummary=document.getElementById("epSummary");
+const epBadge=document.getElementById("epBadge");
+const episodeList=document.getElementById("episodeList");
+
+function renderEpisodes(selected){
+  episodeList.innerHTML="";
+  episodes.forEach((ep,i)=>{
+    const el=document.createElement("article");
+    el.className="episode";
+    el.innerHTML=`
+      <div class="ep-num">EP ${String(i+1).padStart(2,"0")}</div>
+      <div>
+        <div class="ep-name">${ep[0]}</div>
+        <div class="ep-desc">${ep[1]}</div>
+      </div>
+      <div class="ep-time">${ep[2]}</div>
+    `;
+    if(i===selected-1)el.style.borderColor="rgba(255,230,109,.20)";
+    episodeList.appendChild(el);
+  });
+  const ep=episodes[selected-1];
+  epTitle.textContent=ep[0];
+  epSummary.textContent=ep[1];
+  epBadge.textContent=ep[2];
+}
+renderEpisodes(1);
+
+document.querySelectorAll(".season").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".season").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    renderEpisodes(Number(btn.dataset.ep));
+
+    const flash=document.getElementById("glitchCurtain");
+    flash.classList.remove("flash");
+    void flash.offsetWidth;
+    flash.classList.add("flash");
+  });
+});
+
+const terminalLines=[
+  "CIRCUS OS // BOOT",
+  "--------------------------------",
+  "loading: FUN_ENGINE........OK",
+  "loading: MEMORY.............WARN",
+  "loading: EXIT................NOT FOUND",
+  "loading: HUMANITY............UNSTABLE",
+  "loading: CAINE...............ONLINE",
+  "loading: POMNI...............ANXIOUS",
+  "loading: JAX.................CHAOTIC",
+  "loading: RAGATHA.............SMILING",
+  "loading: GANGLE..............FRAGILE",
+  "loading: KINGER..............AWAKE",
+  "loading: ZOOBLE..............ANNOYED",
+  "--------------------------------",
+  "NOTICE: DO NOT QUESTION THE VOID",
+  "NOTICE: THIS IS A HAPPY PLACE",
+  "NOTICE: THIS IS A HAPPY PLACE",
+  "NOTICE: THIS IS A HAPPY PLACE",
+  "",
+  "type 'escape' >"
+];
+const term=document.getElementById("terminalText");
+let li=0,ci=0;
+function typeTerminal(){
+  if(li>=terminalLines.length){
+    term.innerHTML+="<span class='cursor'></span>";
+    return;
+  }
+  const line=terminalLines[li];
+  if(ci<line.length){
+    term.textContent+=line[ci++];
+    setTimeout(typeTerminal,13);
+  }else{
+    term.textContent+="\n";
+    li++;ci=0;
+    setTimeout(typeTerminal,75);
+  }
+}
+setTimeout(typeTerminal,650);
+</script>
+</body>
+</html>
